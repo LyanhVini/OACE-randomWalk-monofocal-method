@@ -1,5 +1,7 @@
 data
 datasets/chest_xray
 datasets/dataset-resized
+datasets/chest_xray.zip
+datasets/dataset-resized.zip
 warm_up_metrics.pkl
 checkpoint.pkl
