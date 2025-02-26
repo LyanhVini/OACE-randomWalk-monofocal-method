@@ -113,8 +113,8 @@ def calculo_maximos_minimos(accumulated_metrics, metricas, tipo):
         for metrica in metricas:
             valores[metrica].append(float(metrics[tipo][metrica]))
 
-    maximos = [np.max(valores[metrica]) for metrica in metricas]
-    minimos = [np.min(valores[metrica]) for metrica in metricas]
+    maximos = [float(np.max(valores[metrica])) for metrica in metricas]
+    minimos = [float(np.min(valores[metrica])) for metrica in metricas]
     return maximos, minimos
 
 def calcular_metricas_oace(iteration_metrics, accumulated_metrics, lambda_, wa, wc, metricas_a, metricas_c, maximos_a=None, minimos_a=None, maximos_c=None, minimos_c=None):
@@ -144,8 +144,8 @@ def calcular_metricas_oace(iteration_metrics, accumulated_metrics, lambda_, wa, 
 
     return {
         "model_name": iteration_metrics["model_name"],
-        "A": assertividade,
-        "C": custo,
-        "Score": score,
+        "A": float(assertividade),
+        "C": float(custo),
+        "Score": float(score),
         "solution": iteration_metrics["solution"]
     }
