@@ -21,15 +21,19 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def generate_solution(models):
-    """ Gera uma solução inicial para o Random Walk, em termos de lr e do modelo a ser usado"""
-    lr = random.uniform(1e-4, 1e-2)
-    model_index = random.randint(0, len(models) - 1)
+def generate_solution(models, seed=None):
+    """Gera uma solução inicial para o Random Walk, em termos de lr e do modelo a ser usado, com semente fixa para reprodutibilidade."""
+    if seed is not None:
+        random.seed(seed)  # Fixa a semente para reprodutibilidade
+    lr = random.uniform(1e-4, 1e-2)  # Intervalo amplo para lr
+    model_index = random.randint(0, len(models) - 1)  # Escolhe aleatoriamente um modelo
     print("model: ", model_index)
     return [lr, model_index]
 
-def random_walk_step(solution, models, step_size=0.1):
-    """Executa um passo do Random Walk para explorar novas soluções"""
+def random_walk_step(solution, models, step_size=0.1, seed=None):
+    """Executa um passo do Random Walk para explorar novas soluções, com semente fixa para reprodutibilidade."""
+    if seed is not None:
+        random.seed(seed)  # Fixa a semente para reprodutibilidade
     new_solution = solution.copy()
     new_solution[0] = min(max(new_solution[0] + random.uniform(-step_size * new_solution[0], step_size * new_solution[0]), 1e-4), 1e-2) 
     new_solution[1] = random.randint(0, len(models) - 1) 
@@ -187,7 +191,7 @@ def optimize_hyperparameters(models_list, trainloader, testloader, validLoader, 
 
         # Reinicia a solução se for um novo round após o checkpoint
         if round_idx > current_round or not checkpoint:
-            solution = generate_solution(models_list)
+            solution = generate_solution(models_list, seed=base_seed)
         else:
             solution = best_solution_overall
 
@@ -196,9 +200,11 @@ def optimize_hyperparameters(models_list, trainloader, testloader, validLoader, 
             global_iteration = round_idx * iterations_per_round + local_iteration  # Iteração global
             if global_iteration <= iteration and checkpoint:  # Pula iterações já processadas
                 continue
-
+            
             current_seed = base_seed + local_iteration  # Incrementa a seed dentro do round
-            random.seed(current_seed)
+            random.seed(current_seed)  # Garante consistência global, mas não é necessário para as funções ajustadas
+            np.random.seed(current_seed)  # Consistência com numpy, se usado
+            torch.manual_seed(current_seed)  # Consistência com PyTorch, se usado
 
             print(f"▶️ Iteration {global_iteration + 1}/{total_iterations} (Round {round_idx + 1}): model {solution[1]} e lr {solution[0]}")
             print(f"🔀 Random Seed Atual: {current_seed}")
@@ -242,7 +248,7 @@ def optimize_hyperparameters(models_list, trainloader, testloader, validLoader, 
                 best_model_overall = model_name
                 best_solution_overall = solution.copy()
 
-            solution = random_walk_step(solution, models_list)
+            solution = random_walk_step(solution, models_list, step_size=0.1, seed=current_seed)
 
             # Salvar checkpoint a cada 'save_checkpoint_every' iterações globais
             if (global_iteration + 1) % save_checkpoint_every == 0 or global_iteration == total_iterations - 1:

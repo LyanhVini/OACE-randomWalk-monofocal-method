@@ -11,7 +11,7 @@ from torchvision import datasets
 
 ### SAMPLE DATASETS FOR TRAINING:
 
-def chest_x_ray(train_dir, val_dir, test_dir, batch_size=32, num_workers=4):  
+def chest_x_ray(train_dir, val_dir, test_dir, batch_size=32, num_workers=0):  
     """Duas classes"""
     data_transform = {
         'train': transforms.Compose([
@@ -51,11 +51,12 @@ def chest_x_ray(train_dir, val_dir, test_dir, batch_size=32, num_workers=4):
     classes = image_datasets['train'].classes
     return dataloaders['train'], dataloaders['val'], dataloaders['test'], classes
 
-def cifar_10(n_valid=0.2, batch_size=64, num_workers=4):
+def cifar_10(n_valid=0.2, batch_size=64, num_workers=0):
     """10 Classes"""
     
     transform_train = transforms.Compose([transforms.ToTensor(),
-                                    transforms.Resize((224, 224)),
+                                    #transforms.Resize((224, 224)),
+                                    transforms.RandomCrop(32, padding=4),   
                                     transforms.Normalize([0.4914, 0.4822, 0.4465],[0.2023, 0.1994, 0.2010])])
     
     transform_test = transforms.Compose([
@@ -96,7 +97,7 @@ def cifar_10(n_valid=0.2, batch_size=64, num_workers=4):
     classes = train_data.classes
     return trainLoader, validLoader, testLoader, classes
 
-def trashNet(dataset_dir, batch_size=32, val_split=0.2, test_split=0.1, num_workers=4):
+def trashNet(dataset_dir, batch_size=32, val_split=0.2, test_split=0.1, num_workers=0):
     """6 Classes"""
     data_transforms = {
         'train': transforms.Compose([
@@ -154,7 +155,7 @@ def verify_dataset(trainloader, valloader, testloader):
     
 ###  SUBSAMPLES DATASETS FOR WARM:
     
-def chest_x_ray_subsample(test_dir, num_workers=4, class_labels=['PNEUMONIA', 'NORMAL']):
+def chest_x_ray_subsample(test_dir, num_workers=0, class_labels=['PNEUMONIA', 'NORMAL']):
     """Chest X-Ray with only two selected classes for warm"""
     data_transform = {
         'test': transforms.Compose([
@@ -169,7 +170,7 @@ def chest_x_ray_subsample(test_dir, num_workers=4, class_labels=['PNEUMONIA', 'N
     
     return dataLoader, classes
 
-def cifar_10_subsample(batch_size=64, num_workers=4, class_labels=['cat', 'dog']):
+def cifar_10_subsample(batch_size=64, num_workers=0, class_labels=['cat', 'dog']):
     """CIFAR-10 with only two selected classes for warm"""
     transform = transforms.Compose([transforms.ToTensor(),
                                     transforms.Resize((224, 224)),
@@ -200,7 +201,7 @@ def cifar_10_subsample(batch_size=64, num_workers=4, class_labels=['cat', 'dog']
     
     return testLoader, classes
 
-def trashNet_subsample(dataset_dir, batch_size=64, num_workers=4, class_labels=['glass', 'plastic']):
+def trashNet_subsample(dataset_dir, batch_size=64, num_workers=0, class_labels=['glass', 'plastic']):
     """TrashNet with only two selected classes for warm"""
     data_transforms = {
         'val_test': transforms.Compose([

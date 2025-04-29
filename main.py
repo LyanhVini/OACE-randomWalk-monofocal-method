@@ -14,19 +14,19 @@ import json
 import pickle
 
 def main():
-    # Definir o caminho do checkpoint
-    
+
     datasets_options = {
         '1': 'Chest X-Ray',
         '2': 'CIFAR-10',
         '3': 'TrashNet'
     }
-    print("Selecione um dataset para rodar o método OACE:")
+    
+    """print("Selecione um dataset para rodar o método OACE:")
     print("1: Chest X-Ray")
     print("2: CIFAR-10")
     print("3: TrashNet")
     
-    choice = input("\nEscolha o número que corresponda ao dataset: ").strip()
+    #choice = input("\nEscolha o número que corresponda ao dataset: ").strip()
     
     if choice == '1':
         lbd = 0.7
@@ -49,8 +49,13 @@ def main():
         subsample_loader, subsample_classes = trashNet_subsample(dataset_dir) 
     else:
         print("Escolha Inv1álida.")
-        return
-
+        return"""
+    lbd = 0.75
+    print("Valor da Lambda: ", lbd)
+    trainLoader, validLoader, testLoader, classes = cifar_10(batch_size=64)
+    dataset_name = datasets_options['2']
+    subsample_loader, subsample_classes = cifar_10_subsample()  
+    
     models = [
         ("EfficientNetB0", get_efficientnet_b0),
         ("MobileNetV2", get_mobilenet_v2),
@@ -91,8 +96,8 @@ def main():
                                                                                             trainLoader, testLoader, validLoader, 
                                                                                             classes, lbd, wa, wc,
                                                                                             dataset_name, checkpoint_path, 
-                                                                                            num_rounds=3, iterations_per_round=5, 
-                                                                                            save_checkpoint_every=3)
+                                                                                            num_rounds=3, iterations_per_round=50, 
+                                                                                            save_checkpoint_every=5)
 
     print(f"Best Model: {best_model}")
     print(f"Best Score: {best_score}")
@@ -105,7 +110,7 @@ def main():
         json.dump(oace_metrics, f)
 
     #Salvando melhor modelo
-    torch.save(best_model, "full_best_model.pt")
+    torch.save(best_model, "full_besdel.pt")
 
     print(f"\nMétodo finalizado para o dataset: {dataset_name}")
 
