@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the implementation of the **Optimized Assertiveness Cost Evaluation (OACE)** method, a multicriteria decision-making (MCDM) approach for selecting and optimizing deep learning models. The OACE method balances assertiveness (e.g., accuracy, precision) and computational cost (e.g., number of parameters, inference time) using a Random Walk algorithm to tune hyperparameters, such as the learning rate (\textit{lr}). The method was developed as part of a research project at PPGEE/UFPA, focusing on computational intelligence and adaptive methods for deep learning optimization, and was evaluated on the CIFAR-10 dataset.
+This repository contains the implementation of the **Optimized Assertiveness Cost Evaluation (OACE)** method, a multicriteria decision-making (MCDM) approach for selecting and optimizing deep learning models. The OACE method balances assertiveness (e.g., accuracy, precision) and computational cost (e.g., number of parameters, inference time) using a Random Walk algorithm to tune hyperparameters, such as the learning rate (lr). The method was developed as part of a research project, focusing on computational intelligence and adaptive methods for deep learning optimization, and was evaluated on the CIFAR-10 dataset.
 
 ## Installation
 
