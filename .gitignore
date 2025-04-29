@@ -4,6 +4,7 @@ datasets/dataset-resized
 datasets/chest_xray.zip
 datasets/dataset-resized.zip
 warm_up_metrics.pkl
+modify_checkpoint.py
 checkpoint.pkl
 oace-monofocal
-modify_checkpoint.py
+
