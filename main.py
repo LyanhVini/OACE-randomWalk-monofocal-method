@@ -63,6 +63,9 @@ def main():
         ("InceptionV3", get_inception_v3),
         ("VGG16", get_vgg16)
     ]
+    
+    print("testando")
+    
     # Informações sobre o ambiente de execução
     print("INFORMAÇÕES SOBRE O AMBIENTE DE EXECUÇÃO: ")
     print("PyTorch version:", torch.__version__)
